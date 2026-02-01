@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- DashBoard Start Here -->
+        <div id="dashboardsec">
+            <div class="header">
+                <img  alt="user image" id="userregimagedisplay">
+                <h1 class="textheading"> MINI BANK DASHBOARD</h1>
+            </div>
+
+            <div class="btnbox">
+                <button onclick="opendepositmodal()"><img src="img/deposit.svg" alt="deposit"> Deposit Money</button>
+                <button onclick="opentranferamountmodal()"><img src="img/transfer.svg" alt="transfer"> Transfer
+                    Money</button>
+                <button onclick="openwithdrawmodel()"><img src="img/withdraw.svg" alt="withdraw"> Withdraw
+                    Money</button>
+                <button onclick="deleteaccount()"><img src="img/delete.svg" alt="delete"> Delete Account</button>
+            </div>
+            <!-- deposit modal box start  -->
+            <div class="modalbox" id="depositmodalbox">
+                <h1 style="text-align: center;">Add Money in Bank</h1>
+                <form action="#">
+                    <div class="inputarea">
+                        <input type="number" placeholder="Enter Amount" id="addamountinput">
+                        <div id="modalboxerror"></div>
+                    </div>
+                    <div class="btnbox">
+                        <button onclick="depositmoney()">Add Money</button>
+                        <button onclick="Closedeposit()">Close</button>
+                    </div>
+                </form>
+            </div>
+            <!-- deposit modal box start  -->
+            <div class="modalbox" id="withdrawmodalbox">
+                <h1 style="text-align:center;">Withdraw your money</h1>
+                <form action="#">
+                    <div class="inputarea">
+                        <input type="number" placeholder="Enter Amount" id="deductamountinput">
+                        <div id="deductmodalboxerror"></div>
+                    </div>
+                    <div class="btnbox">
+                        <button onclick="deductmoney()">Withdraw Money</button>
+                        <button onclick="Closewithdraw()">Close</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Trasnfer modal box start  -->
+            <div class="modalbox" id="transferwmodalbox">
+                <h1 style="text-align:center;">Transfer Money</h1>
+                <form action="#">
+                    <div class="inputarea">
+                        <input type="number" placeholder="Enter Amount" id="transferamountinput">
+                        <input type="number" placeholder="Enter Recipient Account Number" id="recipientaccountnumber">
+                        <div id="transfermodalboxerror"></div>
+                    </div>
+                    <div class="btnbox">
+                        <button onclick="transfermoney()">Transfer Money</button>
+                        <button onclick="CloseTransfer()">Close</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="detailsbox">
+                <h1>Welcome <span id="loginedusername"></span> </h1>
+                <label for="dbacholdername">Account Holder Name: </label>
+                <input type="text" name="dbacholdername" id="dbacholdername" readonly><br>
+                <label for="dbacnumber">Account Number: </label>
+                <input type="text" name="dbacnumber" id="dbacnumber" readonly><br>
+                <label for="dbactype">Account Type: </label>
+                <input type="text" name="dbactype" id="dbactype" readonly><br>
+                <label for="dbbalance">Current Balance: </label>
+                <input type="text" name="dbbalance" id="dbbalance" readonly><br>
+                <button onclick="transanctionhistory()">View Transaction History</button>
+                <button onclick="loginpage()" style="margin: 10px 0px;">LogOut</button>
+            </div>
+        </div>
+        <!-- DashBoard ends Here -->
+
+        <!-- Account Registration Start Here -->
+        <div id="registration">
+            <div class="header">
+                <h1 class="textheading">Account Registration</h1>
+            </div>
+
+            <div class="detailsbox">
+                <h2>Total Register Accounts is <span id="totalaccounts"></span></h2>
+                <label for="userregname">Account Holder Name: </label>
+                <input type="text" name="userregname" id="userregname" required>
+                <label for="userregactype">Account Type: </label>
+                <select name="userregactype" id="userregactype">
+                    <option value="saving">Saving</option>
+                    <option value="current">Current</option>
+                </select>
+                <label for="userregpin">Create PIN(Four Digit Only): </label>
+                <input type="number" name="userregpin" id="userregpin">
+                <label for="userregconfpin">Confirm PIN: </label>
+                <input type="number" name="userregconfpin" id="userregconfpin">
+                <label for="userreginitialdpamount">Initial Deposit Amount: </label>
+                <input type="number" name="userreginitialdpamount" id="userreginitialdpamount" required><br>
+                <label for="userreginitialdpamount">Upload Profile Picture: </label>
+                <input type="file" name="userregprofilepic" id="userregprofilepic" required  accept="image/*"><br>
+                <button onclick="registeraccount(event)" class="">Submit</button>
+                <div id="acnumbershow">
+                    <label>Your Account Number (Pls Note This Number): </label>
+                    <input type="text" name="userregacnumber" id="userregacnumber" readonly style="text-align: center;">
+                </div>
+                <button onclick="loginpage()" style="margin: 10px 0px;">Already Registered ? Login now</button>
+            </div>
+        </div>
+        <!-- Account Login Start Here -->
+        <div id="login">
+            <div class="header">
+                <h1 class="textheading">Login Account Here</h1>
+            </div>
+            <div class="detailsbox">
+                <label for="userloginname">Account Holder Name: </label>
+                <input type="text" name="userloginname" id="userloginname" required>
+                <label for="userloginpin">Your PIN: </label>
+                <input type="number" name="userloginpin" id="userloginpin">
+                <button style="margin: 10px 0px;" onclick="accountlogin()" id="loginsubmit">Submit</button>
+                <p id="loginerror"></p>
+                <button style="margin: 10px 0px;" onclick="registerpage()">Register new account</button>
+
+            </div>
+        </div>
+        <!-- Transaction History Start Here -->
+        <div id="transactions">
+            <div class="filters">
+                <h2 id="transactionsstatus"></h2>
+            </div>
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Credit/Debit</th>
+                    </tr>
+                </thead>
+                <tbody id="tablebody"></tbody>
+            </table>
+        </div>
+
+
+    </div>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
