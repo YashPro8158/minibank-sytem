@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <div class="loader" style="display:none;" id="loader">
-            <div class="spinner"></div> 
+            <div class="spinner"></div>
             <h4>Loading Data........</h4>
 
         </div>
@@ -41,7 +41,7 @@
                     Money</button>
                 <button onclick="openwithdrawmodel()"><img src="img/withdraw.svg" alt="withdraw"> Withdraw
                     Money</button>
-                <button onclick="deleteaccount()"><img src="img/delete.svg" alt="delete"> Delete Account</button>
+                <button onclick="opendeletemodel()"><img src="img/delete.svg" alt="delete"> Delete Account</button>
                 <button onclick="opensearchaccountmodal()"><img src="img/search.svg" alt="search"> Search
                     Account</button>
                 <button onclick="toggleTheme()"><img src="img/toggledarktheme.svg" alt="search" id="toggleimg"></button>
@@ -50,7 +50,7 @@
             <!-- deposit modal box start  -->
             <div class="modalbox" id="depositmodalbox">
                 <h1 style="text-align: center;">Add Money in Bank</h1>
-                <form action="#">
+                <form >
                     <div class="inputarea">
                         <input type="number" placeholder="Enter Amount" id="addamountinput">
                     </div>
@@ -60,7 +60,7 @@
                     </div>
                 </form>
             </div>
-            <!-- deposit modal box start  -->
+            <!-- withdrawl modal box start  -->
             <div class="modalbox" id="withdrawmodalbox">
                 <h1 style="text-align:center;">Withdraw your money</h1>
                 <form action="#">
@@ -84,6 +84,39 @@
                     <div class="btnbox">
                         <button onclick="transfermoney()">Transfer Money</button>
                         <button onclick="CloseTransfer()">Close</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- account search modal here  -->
+            <div class="modalbox" id="searchaccountbox">
+
+                <div class="detailsbox">
+                    <h1 style="text-align:center;">Search Account</h1>
+                    <label for="usersearchaccnumber">Enter the Account Number to Search: </label>
+                    <input type="number" name="usersearchaccnumber" id="usersearchaccnumber" required>
+                    <button style="margin: 10px 0px;" id="searchaccbtn">Search Account</button>
+                    <button id="cancelsearchbtn" onclick="closeSearchAccountBox()">Cancel Search</button>
+                    <div id="searcherrormsgmodal">
+                        <p id="usersearchederrormsg"></p>
+                        <button id="transfermoneybtn">Transfer money</button>
+                        <button style="margin: 10px 0px;" onclick="closeSearchAccountBox()">Close</button>
+                    </div>
+
+                </div>
+            </div>
+
+              <!-- delete modal box start  -->
+            <div class="modalbox" id="deletemodalbox">
+                <h1 style="text-align: center;">Delete Account</h1>
+                <form action="#">
+                    <div class="inputarea">
+                        <input type="number" placeholder="Enter Pin of your account" id="userdeletepin">
+                        <p id="errordeletepin"></p>
+                    </div>
+                    <div class="btnbox">
+                        <button onclick="deleteaccount()">Delete Account</button>
+                        <button onclick="closedeletemodel()">Close</button>
                     </div>
                 </form>
             </div>
@@ -118,7 +151,6 @@
             </div>
 
             <div class="detailsbox">
-                <h2 style="display: none;"><span id="totalaccounts"></span></h2>
                 <label for="userregname">Account Holder Name: </label>
                 <input type="text" name="userregname" id="userregname" required>
                 <label for="userregactype">Account Type: </label>
@@ -205,6 +237,7 @@
                         <th>Account Number</th>
                         <th>Account Type</th>
                         <th>Current Balance</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="adminpaneltabledata"></tbody>
@@ -236,32 +269,21 @@
             </table>
         </div>
 
-        <!-- account search here  -->
-        <div class="modalbox" id="searchaccountbox">
-            <div class="detailsbox">
-                <label for="usersearchaccnumber">Enter the Account Number to Search: </label>
-                <input type="number" name="usersearchaccnumber" id="usersearchaccnumber" required>
-                <button style="margin: 10px 0px;" id="searchaccbtn">Search Account</button>
-                <button id="cancelsearchbtn" onclick="closeSearchAccountBox()">Cancel Search</button>
-                <div id="searcherrormsgmodal">
-                    <p id="usersearchederrormsg"></p>
-                    <button id="transfermoneybtn">Transfer money</button>
-                    <button style="margin: 10px 0px;" onclick="closeSearchAccountBox()">Close</button>
-                </div>
-
-            </div>
-        </div>
 
         <div class="detailsbox postionupdatebox" id="updateaccountbox">
-            <h2>Update Account Details</h2>
+            <h2>Update Account Details </h2>
+            <p id="smallupdatenote">Note: Only the fields you fill will be updated. You can leave others blank.</p>
             <label for="updateaccountname">Update Account Holder Name: </label>
-            <input type="text" name="updateaccountname" id="updateaccountname" required>
+            <input type="text" name="updateaccountname" id="updateaccountname">
             <label for="updateaccountpin">Update Account PIN: </label>
-            <input type="password" name="updateaccountpin" id="updateaccountpin" required>
+            <input type="password" name="updateaccountpin" id="updateaccountpin">
+
+            <label for="updateimage">Update Profile Image: </label>
+            <input type="file" name="updateimage" id="updateimage" accept="image/*"><br>
+
             <button style="margin: 10px 0px;" onclick="updateaccountdetails()">Update Details</button>
             <button style="margin: 10px 0px;" onclick="closeupdateaccountbox()">Close</button>
         </div>
-    </div>
     </div>
     <script src="scripts.js"></script>
 </body>
