@@ -14,7 +14,8 @@
   --radius: 16px;
   --shadow: 0px 4px 20px rgba(0, 0, 0, 0.10);
 }
-.loader{
+
+.loader {
   position: fixed;
   width: 100%;
   height: 100vh;
@@ -26,18 +27,27 @@
   align-items: center;
   z-index: 2000;
 }
-.spinner { 
-  border: 8px solid #f3f3f3; /* Light grey */
-  border-top: 8px solid #2563eb; /* Blue */
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #2563eb;
+  /* Blue */
   border-radius: 50%;
   width: 60px;
   height: 60px;
   animation: spin 1s linear infinite;
   margin: 0px 15px;
 }
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 body {
@@ -71,11 +81,14 @@ body {
   border-radius: 50%;
   margin: 10px;
   display: none;
+  object-fit: cover;
 }
-.textheading{
+
+.textheading {
   display: flex;
   align-items: center;
 }
+
 /* MAIN CONTAINER */
 .container {
   width: 95%;
@@ -195,6 +208,10 @@ label {
   border-radius: var(--radius);
   padding: 14px;
   font-size: 15px;
+  width: 100%;
+  margin-bottom: 11px;
+
+
 }
 
 .modalbox form input:focus {
@@ -260,15 +277,33 @@ table tr:last-child td {
 }
 
 #toasterrormsg {
-  display: none;
-  width: 40%;
-  margin: 10px auto;
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #000;
-  border-radius: var(--radius);
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  
+  min-width: 250px;
+  max-width: 400px;
+  padding: 12px 20px;
+
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  border-radius: 8px;
+
   text-align: center;
-  height: auto;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: all 0.4s ease;
+}
+
+/* SHOW STATE */
+#toasterrormsg.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 #cancelsearchbtn {
@@ -312,7 +347,7 @@ body.dark table {
   color: #e5e7eb;
 }
 
-body.dark .modalbox h1{
+body.dark .modalbox h1 {
   color: #1e293b;
 }
 
@@ -334,6 +369,11 @@ body.dark .modalbox h1{
 
 #updateaccountbox {
   display: none;
+}
+
+#smallupdatenote {
+  font-size: 12px;
+  color: red;
 }
 
 
@@ -369,11 +409,9 @@ body.dark .modalbox h1{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-
-  .filtersbtns {
     gap: 4px;
   }
+
 }
 
 @media (max-width: 350px) {
