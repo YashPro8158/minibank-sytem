@@ -2,7 +2,6 @@
 
 // userdata storage 
 let storeduser = JSON.parse(localStorage.getItem('regaccountdetails')) || [];
-document.getElementById("totalaccounts").innerText = storeduser.length;
 let founduser = null;
 // user data registration inputs
 let userregname = document.getElementById("userregname");
@@ -17,6 +16,10 @@ let deductamountinput = document.getElementById("deductamountinput");
 let userregprofilepic = document.getElementById("userregprofilepic");
 let userregimagedisplay = document.getElementById("userregimagedisplay");
 let searchaccountbox = document.getElementById("searchaccountbox");
+let deletemodalbox = document.getElementById("deletemodalbox");
+
+
+// convert the image in BASE64
 function convertToBase64(file, callback) {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -24,6 +27,9 @@ function convertToBase64(file, callback) {
     };
     reader.readAsDataURL(file);
 }
+
+
+// Loader Function
 function loader(show) {
 
     const loader = document.getElementById("loader");
@@ -32,6 +38,8 @@ function loader(show) {
         loader.style.display = "none";
     }, 500);
 }
+
+
 // Check Session Login Status
 (function checkSessionLogin() {
     let loggedAccount = sessionStorage.getItem("loggedUserAccount");
@@ -53,6 +61,8 @@ function loader(show) {
         loginpage();
     }
 })();
+
+
 // Dashboard Function
 function dashboard() {
     loader(true);
@@ -70,12 +80,15 @@ function dashboard() {
     document.getElementById("login").style.display = "none";
 }
 
+
 // Input Error  Msg
 addamountinput.addEventListener('input', () => {
     if (addamountinput.value < 0) {
         showToast("Pls Enter the Valid Number", "red");
     }
 })
+
+
 
 // Add Money Modal Box  
 
@@ -90,6 +103,7 @@ function Closedeposit() {
 }
 
 
+
 // Withdraw Money Modal Box  
 
 function openwithdrawmodel() {
@@ -102,14 +116,12 @@ function Closewithdraw() {
     withdrawmodal.style.display = "none";
 }
 
+
 // search account modal box
 function opensearchaccountmodal() {
     searchaccountbox.style.display = "block";
 }
-function opentranferamountmodal() {
-    let transferwmodalbox = document.getElementById("transferwmodalbox");
-    transferwmodalbox.style.display = "block";
-}
+
 function closeSearchAccountBox() {
     searchaccountbox.style.display = "none";
     document.getElementById("cancelsearchbtn").style.display = "block";
@@ -118,6 +130,11 @@ function closeSearchAccountBox() {
     document.getElementById("searcherrormsgmodal").style.display = "none";
 }
 
+// Transfer  modal box
+function opentranferamountmodal() {
+    let transferwmodalbox = document.getElementById("transferwmodalbox");
+    transferwmodalbox.style.display = "block";
+}
 function CloseTransfer() {
     let transferwmodalbox = document.getElementById("transferwmodalbox");
     transferwmodalbox.style.display = "none";
@@ -125,6 +142,16 @@ function CloseTransfer() {
     document.getElementById("transferamountinput").value = "";
 }
 
+// Delete  modal box
+
+
+function opendeletemodel() {
+    deletemodalbox.style.display = "block";
+}
+function closedeletemodel() {
+    deletemodalbox.style.display = "none";
+    document.getElementById("userdeletepin").value = ""
+}
 // Account Registration Logic
 function registerpage() {
     loader(true);
@@ -132,7 +159,6 @@ function registerpage() {
     document.getElementById("login").style.display = "none"
 
 }
-
 function registeraccount() {
 
     if (userregpin.value !== userregconfpin.value) {
@@ -140,8 +166,8 @@ function registeraccount() {
         return;
     }
 
-    if (storeduser.some(u => u.name.toLowerCase() === userregname.value.toLowerCase())) {
-        alert("User Already Registered")
+    if (storeduser.some(u => u.email.toLowerCase() === userregemail.value.toLowerCase())) {
+        alert("Email Already Exist, Pls Try Different Email id or Login by clicking on Login Now Button")
         return;
     }
     if (userregname.value === "" || userregname.value === null) {
@@ -180,12 +206,9 @@ function registeraccount() {
         storeduser.push(regaccountdetails);
         localStorage.setItem("regaccountdetails", JSON.stringify(storeduser));
     }
-    storeduser.push(regaccountdetails);
-    localStorage.setItem('regaccountdetails', JSON.stringify(storeduser));
 
     userregacnumber.value = generateaccountnumber;
     document.getElementById("acnumbershow").style.display = "block"
-    console.log("Registered:", regaccountdetails);
 }
 
 // Account login Logic Starts Here
@@ -220,12 +243,8 @@ function accountlogin() {
     }
     else {
         if (founduser) {
-            alert("Login Successfull");
-            sessionStorage.setItem(
-                "loggedUserAccount",
-                founduser.accountnumber
-            );
-
+            showToast("User Login Successfull", "green");
+            sessionStorage.setItem("loggedUserAccount", founduser.accountnumber);
             dashboard();
 
         }
@@ -307,12 +326,6 @@ function transanctionhistory() {
     document.getElementById("transactions").style.display = "block";
     let storeduserindex = storeduser.findIndex(u => u.accountnumber === founduser.accountnumber);
     const tablebody = document.getElementById("tablebody");
-    console.log(storeduser[storeduserindex].transactionhistory);
-    console.log(storeduser[storeduserindex].transactiondate);
-    storeduser.forEach((u, index) => {
-        console.log(`User at index ${index}: ${u.name}: ${u.pin}`);
-    });
-
     let transactions = storeduser[storeduserindex].transactionhistory;
     let dates = storeduser[storeduserindex].transactiondate;
 
@@ -353,10 +366,26 @@ function transanctionhistory() {
 function closetransactions() {
     document.getElementById("transactions").style.display = "none";
 }
+function deletefrombankerportal(accountnumber) {
+    let index = storeduser.findIndex(u => u.accountnumber === accountnumber);
+    if (index !== -1) {
+        storeduser.splice(index, 1);
+        localStorage.setItem("regaccountdetails", JSON.stringify(storeduser));
+        showToast("Account Deleted Successfully", "green"); document.getElementById("adminpaneltablebody").innerHTML = "";
+        displayallaccounts();
+    }
+
+}
 function deleteaccount() {
-    let userdeletepin = Number(prompt("Pls Enter your PIN to Delete your Account: "));
+    let userdeletepin = Number(document.getElementById("userdeletepin").value);
+
     if (userdeletepin !== founduser.pin) {
-        alert("Invalid PIN");
+        document.getElementById("errordeletepin").style.display = "block"
+        document.getElementById("errordeletepin").innerText = "Invalid PIN"
+        document.getElementById("errordeletepin").style.color = "red"
+        setTimeout(() => {
+            document.getElementById("errordeletepin").style.display = "none"
+        }, 2000);
         return;
     }
     if (founduser.pin === Number(userdeletepin)) {
@@ -365,11 +394,19 @@ function deleteaccount() {
             let storeduserindex = storeduser.findIndex(u => u.accountnumber === founduser.accountnumber);
             storeduser.splice(storeduserindex, 1);
             localStorage.setItem('regaccountdetails', JSON.stringify(storeduser));
-            document.getElementById("totalaccounts").innerText = storeduser.length;
             alert("Account Deleted Successfully");
             loginpage();
+            document.getElementById("userdeletepin").value = ""
+            closedeletemodel()
+        }
+        else {
+            showToast("Use Cancelled to Delete Account", "Green")
+            document.getElementById("userdeletepin").value = ""
+            closedeletemodel()
         }
     }
+
+
 }
 
 
@@ -500,9 +537,10 @@ function bankerlogin() {
         return;
     }
     if (bankermailid === "admin@bank.com" && bankerpswd === "admin123") {
-        alert("Banker Login Successfull");
+        showToast("Banker Login Successfull", "green");
         document.getElementById("adminpanel").style.display = "block";
         document.getElementById("bankerloginpage").style.display = "none";
+        document.getElementById("adminpaneltablebody").innerHTML = "";
         displayallaccounts();
     }
     else {
@@ -519,70 +557,97 @@ function displayallaccounts() {
         let tablecell2 = document.createElement("td");
         let tablecell3 = document.createElement("td");
         let tablecell4 = document.createElement("td");
+        let tablecell5 = document.createElement("td");
         tablecell1.innerText = user.name;
         tablecell2.innerText = user.accountnumber;
         tablecell3.innerText = user.accounttype;
         tablecell4.innerText = user.initialamount;
+        tablecell5.innerHTML = `<button onclick="deletefrombankerportal(${user.accountnumber})">Delete Account</button>`;
         tablerow.appendChild(tablecell1);
         tablerow.appendChild(tablecell2);
         tablerow.appendChild(tablecell3);
         tablerow.appendChild(tablecell4);
+        tablerow.appendChild(tablecell5);
         adminpaneltablebody.appendChild(tablerow);
     });
 }
 // Toast Message Function
 function showToast(msg, color = "red") {
     const toast = document.getElementById("toasterrormsg");
-    toast.style.display = "block";
-    toast.style.color = color;
+
     toast.innerText = msg;
 
+    // color logic
+    if (color === "green") {
+        toast.style.background = "#28a745";
+    } else if (color === "red") {
+        toast.style.background = "#dc3545";
+    } else {
+        toast.style.background = "#333";
+    }
+
+    // show animation
+    toast.classList.add("show");
+
     setTimeout(() => {
-        toast.style.display = "none";
+        toast.classList.remove("show");
     }, 2000);
 }
 
 // Update Account Details Modal Box
 function showupdateaccountbox() {
+
+    document.getElementById("dashboardsec").style.display = "none";
     let updateaccountbox = document.getElementById("updateaccountbox");
     updateaccountbox.style.display = "block";
 }
 function closeupdateaccountbox() {
+    document.getElementById("dashboardsec").style.display = "block";
     let updateaccountbox = document.getElementById("updateaccountbox");
     updateaccountbox.style.display = "none";
 }
 function updateaccountdetails() {
     let updatedname = document.getElementById("updateaccountname").value;
     let updatedpin = document.getElementById("updateaccountpin").value;
+    let updateimage = document.getElementById("updateimage");
 
     let storeduserindex = storeduser.findIndex(u => u.accountnumber === founduser.accountnumber);
 
-    if (updatedname && updatedpin && !isNaN(updatedpin)) {
+    if (!updatedname && !updatedpin && !updateimage.files[0]) {
 
-        // update user in stored data
+        showToast("Nothing to update", "red");
+        return;
+    }
+    // NAME
+    if (updatedname) {
         storeduser[storeduserindex].name = updatedname;
-        storeduser[storeduserindex].pin = Number(updatedpin);
-
-        // update founduser object also
         founduser.name = updatedname;
+        showToast("Account Name Updated Successfully", "green");
+    }
+
+    // PIN
+    if (updatedpin && !isNaN(updatedpin)) {
+        storeduser[storeduserindex].pin = Number(updatedpin);
         founduser.pin = Number(updatedpin);
-
-        // save to localStorage
-        localStorage.setItem("regaccountdetails", JSON.stringify(storeduser));
-
-        showToast("Account Details Updated Successfully", "green");
-
-        // update UI
-        dashboard();
+        showToast("Account Pin Updated Successfully", "green");
     }
-    else {
-        showToast("Invalid Input", "red");
+    if (updateimage.files[0]) {
+        convertToBase64(updateimage.files[0], function (base64Image) {
+            storeduser[storeduserindex].imageFile = base64Image;
+            founduser.imageFile = base64Image;
+
+            dashboard(); // yaha call kar (callback ke andar)
+        });
+        showToast("Account Image Updated Successfully", "green");
     }
+
+    localStorage.setItem("regaccountdetails", JSON.stringify(storeduser));
 
     closeupdateaccountbox();
+    // update UI
+    dashboard();
 }
 
 
 // End of Script File
-
 
